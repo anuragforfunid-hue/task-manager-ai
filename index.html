@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task Manager</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, #eef2ff, #f8fafc);
+        color: #111827;
+      }
+
+      .card {
+        width: min(92vw, 480px);
+        padding: 24px;
+        border-radius: 16px;
+        background: white;
+        box-shadow: 0 12px 35px rgba(15, 23, 42, 0.12);
+      }
+
+      h1 {
+        margin-top: 0;
+        font-size: 1.6rem;
+      }
+
+      form {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      input {
+        flex: 1;
+        padding: 10px 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 1rem;
+      }
+
+      button {
+        border: none;
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+
+      .add-btn {
+        background: #2563eb;
+        color: white;
+      }
+
+      .delete-btn {
+        background: #ef4444;
+        color: white;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      .empty {
+        justify-content: center;
+        color: #64748b;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Task Manager</h1>
+      <form id="task-form">
+        <input id="task-input" type="text" placeholder="Enter a task" required />
+        <button class="add-btn" type="submit">Add</button>
+      </form>
+      <ul id="task-list"></ul>
+    </div>
+
+    <script>
+      const form = document.getElementById('task-form');
+      const input = document.getElementById('task-input');
+      const list = document.getElementById('task-list');
+      const tasks = [];
+
+      function renderTasks() {
+        list.innerHTML = '';
+
+        if (tasks.length === 0) {
+          const emptyItem = document.createElement('li');
+          emptyItem.className = 'empty';
+          emptyItem.textContent = 'No tasks yet. Add one above.';
+          list.appendChild(emptyItem);
+          return;
+        }
+
+        tasks.forEach((task, index) => {
+          const item = document.createElement('li');
+          const label = document.createElement('span');
+          label.textContent = task;
+
+          const deleteButton = document.createElement('button');
+          deleteButton.className = 'delete-btn';
+          deleteButton.textContent = 'Delete';
+          deleteButton.addEventListener('click', () => {
+            tasks.splice(index, 1);
+            renderTasks();
+          });
+
+          item.appendChild(label);
+          item.appendChild(deleteButton);
+          list.appendChild(item);
+        });
+      }
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const task = input.value.trim();
+
+        if (!task) {
+          return;
+        }
+
+        tasks.push(task);
+        input.value = '';
+        renderTasks();
+      });
+
+      renderTasks();
+    </script>
+  </body>
+</html>
